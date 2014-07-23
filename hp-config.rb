@@ -13,19 +13,19 @@ conn = Fog::Compute.new(
 
 #puts "connection: #{conn.inspect}"
 #response = conn.list_servers
-puts "########"
+#puts "########"
 response = conn.list_servers_detail
 #puts "#{response.body['images']}"                     # returns an array of image hashe
 #puts "#{response.body['servers'][0]['image']}" 
 
 
 class Notify_instances
-    def initialize(name)
-      @instance_name= name
-    end
-    def display_details()
-      puts "Instance name #@instance_name"
-    end
+  def initialize(name)
+   @instance_name= name
+  end
+  def display_details()
+   puts "Instance name #@instance_name"
+  end
 end
 
 
@@ -39,18 +39,17 @@ inst.display_details()
 $i+=1
 end
 
-
-$data = Array.new(20)
-$data = #{response.body['servers'][0]['created']}
+# For instance creation 
+data = Array.new(20)
+data = "#{response.body['servers'][0]['created']}"
 
 #$data = Time.now
-puts $data
-
-if $data <= Time.now
-
-        puts "Done"
+#puts Date.parse(Time.now.to_s)
+puts DateTime.parse(data).to_date.to_s
+puts data[0..9]
+#puts DateTime.parse(data).to_time.to_s
+if  DateTime.parse(data).to_date.to_s ==  data [0..9]
+  puts "Date Matched "
 else
-        puts "Not Done"
-
-end 
-
+  puts "not done"
+end
