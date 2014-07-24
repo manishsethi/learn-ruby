@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'fog'
+require 'date'
+require 'time'
 
 conn = Fog::Compute.new(
        :provider => "HP",
@@ -11,45 +13,49 @@ conn = Fog::Compute.new(
        :hp_avl_zone => "region-b.geo-1",
         )
 
-#puts "connection: #{conn.inspect}"
-#response = conn.list_servers
-#puts "########"
-response = conn.list_servers_detail
-#puts "#{response.body['images']}"                     # returns an array of image hashe
-#puts "#{response.body['servers'][0]['image']}" 
+  response = conn.list_servers_detail
+  #puts "#{response.body['servers'][0]['image']}" 
 
 
-class Notify_instances
-  def initialize(name)
-   @instance_name= name
+  class Notify_instances
+    def initialize(name)
+     @instance_name= name
+    end
+    def display_details()
+     puts "Instance name #@instance_name"
+    end
   end
-  def display_details()
-   puts "Instance name #@instance_name"
+
+  # For instance name display
+  $i = 0
+  while $i<2
+   inst=Notify_instances.new("#{response.body['servers'][$i]['name']}")
+   inst.display_details()
+   $i+=1
   end
-end
-
-
-# For instance name display
-$i = 0
-#inst = Array.new(5,10)
-while $i<2
-inst=Notify_instances.new("#{response.body['servers'][$i]['name']}")
-
-inst.display_details()
-$i+=1
-end
-
-# For instance creation 
-data = Array.new(20)
-data = "#{response.body['servers'][0]['created']}"
-
-#$data = Time.now
-#puts Date.parse(Time.now.to_s)
-puts DateTime.parse(data).to_date.to_s
-puts data[0..9]
-#puts DateTime.parse(data).to_time.to_s
-if  DateTime.parse(data).to_date.to_s ==  data [0..9]
-  puts "Date Matched "
-else
-  puts "not done"
-end
+ 
+  # For instance creation
+  $j = 0 
+  while $j<2
+   puts "Checking #{$j} instances "
+   puts Time.parse("#{response.body['servers'][$j]['created']}")
+   t1 = Time.parse("#{response.body['servers'][$j]['created']}") 
+   t2 = Time.now
+   puts t1
+   puts t2
+   # standardize the time and date
+   date1 = (t1.year + t1.mon + t1.day)
+   puts date1
+   date2 = (t2.year + t2.mon + t2.day)
+   puts date2
+   if date1 == date2 then
+    time1 = (t1.hour * 60 * 60 + t1.min * 60 + t1.sec)
+    puts time1
+    timev2 = (t2.hour * 60 * 60 + t2.min * 60 + t2.sec)
+    puts time2
+    if (conv2 - conv1) == 1800 then
+     puts "done"
+    end
+   end 
+   $j += 1
+  end
