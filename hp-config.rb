@@ -41,8 +41,8 @@ conn = Fog::Compute.new(
    puts Time.parse("#{response.body['servers'][$j]['created']}")
    t1 = Time.parse("#{response.body['servers'][$j]['created']}") 
    t2 = Time.now
-   puts t1
-   puts t2
+#  puts t1
+#  puts t2
    # standardize the time and date
    date1 = (t1.year + t1.mon + t1.day)
    puts date1
@@ -50,11 +50,11 @@ conn = Fog::Compute.new(
    puts date2
    if date1 == date2 then
     time1 = (t1.hour * 60 * 60 + t1.min * 60 + t1.sec)
-    puts time1
-    timev2 = (t2.hour * 60 * 60 + t2.min * 60 + t2.sec)
-    puts time2
-    if (conv2 - conv1) == 1800 then
-     puts "done"
+#   puts time1
+    time2 = (t2.hour * 60 * 60 + t2.min * 60 + t2.sec)
+#   puts time2
+    if (time2 - time1) <= 1800 then
+     system("ruby ms-email.rb")
     end
    end 
    $j += 1
